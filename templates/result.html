@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Result</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+}
+
+.container {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card {
+    background:#1e293b;
+    padding:40px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+.result-high {
+    color:#ef4444;
+}
+
+.result-low {
+    color:#22c55e;
+}
+
+a {
+    display:inline-block;
+    margin-top:20px;
+    padding:10px 20px;
+    background:#ef4444;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+
+<h1>Prediction Result</h1>
+
+<h2>{{ result }}</h2>
+
+<a href="/">Go Home</a>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Prediction</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+}
+
+.container {
+    width:400px;
+    margin:50px auto;
+    background:#1e293b;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+h2 {
+    text-align:center;
+}
+
+input, select {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+}
+
+button {
+    width:100%;
+    padding:12px;
+    background:#ef4444;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#dc2626;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>Enter Patient Data</h2>
+
+<form action="/result" method="POST">
+
+<input type="number" name="age" placeholder="Age" required>
+<input type="number" name="height" placeholder="Height (cm)" required>
+<input type="number" name="weight" placeholder="Weight (kg)" required>
+<input type="number" name="ap_hi" placeholder="Systolic BP" required>
+<input type="number" name="ap_lo" placeholder="Diastolic BP" required>
+
+<select name="gender">
+<option value="1">Male</option>
+<option value="2">Female</option>
+</select>
+
+<select name="cholesterol">
+<option value="1">Normal</option>
+<option value="2">Above Normal</option>
+<option value="3">High</option>
+</select>
+
+<select name="gluc">
+<option value="1">Normal</option>
+<option value="2">Above Normal</option>
+<option value="3">High</option>
+</select>
+
+<select name="smoke">
+<option value="0">No Smoking</option>
+<option value="1">Smoking</option>
+</select>
+
+<select name="alco">
+<option value="0">No Alcohol</option>
+<option value="1">Alcohol</option>
+</select>
+
+<select name="active">
+<option value="0">Not Active</option>
+<option value="1">Active</option>
+</select>
+
+<br>
+<button type="submit">Predict</button>
+
+</form>
+</div>
+
+</body>
+</html>
