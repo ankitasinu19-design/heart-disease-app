@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Health Diagnostics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type="range"] { accent-color: #dc2626; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-red-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3">
+      <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+      </svg>
+      <div>
+        <h1 class="text-xl font-bold leading-tight">Heart Health Diagnostics</h1>
+        <p class="text-red-200 text-xs">AI-powered cardiovascular risk assessment</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Hero -->
+    <div class="bg-gradient-to-r from-red-700 to-red-500 rounded-2xl text-white p-8 mb-8 shadow-lg">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl font-bold mb-3">Cardiovascular Risk Assessment</h2>
+        <p class="text-red-100 text-base leading-relaxed">
+          Enter your health metrics below to receive an interpretable risk assessment powered by a
+          model trained on 7,000 heart disease records. Each contributing factor is explained
+          individually so you can understand what drives the result.
+        </p>
+        <p class="text-red-200 text-xs mt-3 italic">
+          Warning: For educational purposes only. Does not constitute medical advice.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Form -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-sm p-6 sticky top-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-2">
+            <span class="inline-block w-2 h-6 bg-red-600 rounded-full"></span>
+            Health Metrics
+          </h2>
+          <form id="healthForm" class="space-y-4">
+
+            <!-- Age -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="age" min="29" max="77" value="45" class="flex-1">
+                <span id="ageVal" class="text-sm font-semibold w-12 text-right">45</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Years (29-77)</p>
+            </div>
+
+            <!-- Sex -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Sex</label>
+              <select id="sex" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <!-- Chest Pain Type -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Chest Pain Type</label>
+              <select id="chestPainType" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="TA">Typical Angina</option>
+                <option value="ATA" selected>Atypical Angina</option>
+                <option value="NAP">Non-Anginal Pain</option>
+                <option value="ASY">Asymptomatic</option>
+              </select>
+            </div>
+
+            <!-- Resting BP -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Resting Blood Pressure</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="restingBP" min="80" max="200" value="120" class="flex-1">
+                <span id="restingBPVal" class="text-sm font-semibold w-20 text-right">120 mmHg</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">mmHg</p>
+            </div>
+
+            <!-- Cholesterol -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Serum Cholesterol</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="cholesterol" min="100" max="600" value="200" class="flex-1">
+                <span id="cholesterolVal" class="text-sm font-semibold w-20 text-right">200 mg/dL</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">mg/dL</p>
+            </div>
+
+            <!-- Fasting BS -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fasting Blood Sugar &gt; 120 mg/dL</label>
+              <select id="fastingBS" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+
+            <!-- Resting ECG -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Resting ECG Result</label>
+              <select id="restingECG" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="Normal">Normal</option>
+                <option value="ST">ST-T Wave Abnormality</option>
+                <option value="LVH">Left Ventricular Hypertrophy</option>
+              </select>
+            </div>
+
+            <!-- Max HR -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Max Heart Rate Achieved</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="maxHR" min="60" max="202" value="150" class="flex-1">
+                <span id="maxHRVal" class="text-sm font-semibold w-16 text-right">150 bpm</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">bpm</p>
+            </div>
+
+            <!-- Exercise Angina -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Exercise-Induced Angina</label>
+              <select id="exerciseAngina" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+
+            <!-- Oldpeak -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ST Depression (Oldpeak)</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="oldpeak" min="0" max="6.2" step="0.1" value="0" class="flex-1">
+                <span id="oldpeakVal" class="text-sm font-semibold w-14 text-right">0.0 mm</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">mm relative to rest</p>
+            </div>
+
+            <!-- ST Slope -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ST Slope</label>
+              <select id="stSlope" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                <option value="Up">Upsloping</option>
+                <option value="Flat">Flat</option>
+                <option value="Down">Downsloping</option>
+              </select>
+            </div>
+
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md mt-2 cursor-pointer">
+              Assess My Heart Risk &rarr;
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="lg:col-span-2 space-y-6" id="results">
+
+        <!-- Placeholder -->
+        <div id="placeholder" class="bg-white rounded-xl shadow-sm p-10 flex flex-col items-center justify-center text-center min-h-64">
+          <svg class="w-16 h-16 text-red-200 mb-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+          </svg>
+          <p class="text-gray-500 text-lg font-medium">Your results will appear here</p>
+          <p class="text-gray-400 text-sm mt-1">Fill in your health metrics and click "Assess My Heart Risk"</p>
+        </div>
+
+        <!-- Result sections (hidden initially) -->
+        <div id="resultContent" class="hidden space-y-6">
+
+          <!-- Risk Meter -->
+          <div id="riskMeter" class="rounded-xl border-2 p-6 text-center"></div>
+
+          <!-- Contributing Factors -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-base font-semibold text-gray-900 mb-1 flex items-center gap-2">
+              <span class="inline-block w-2 h-5 bg-red-600 rounded-full"></span>
+              Contributing Factors
+            </h3>
+            <p class="text-xs text-gray-400 mb-4">Each bar shows how much a factor increases (red) or decreases (green) your estimated risk.</p>
+            <div class="text-xs text-gray-400 mb-4 flex gap-4">
+              <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-sm bg-red-500"></span> Increases risk</span>
+              <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-sm bg-green-500"></span> Reduces risk</span>
+            </div>
+            <div id="factorBars"></div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Factor Impact (Bar Chart)</h3>
+              <canvas id="barChart"></canvas>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Risk Profile (Radar)</h3>
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Recommendation -->
+          <div id="recommendation" class="rounded-xl p-5 border-l-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Educational Content -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Heart Disease: What You Should Know</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-red-500">
+          <h3 class="text-base font-semibold text-gray-900 mb-3">Warning Signs</h3>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Chest pain, tightness, or pressure</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Shortness of breath at rest or with activity</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Pain radiating to arm, neck, jaw, or back</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Irregular or rapid heartbeat (palpitations)</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Unusual fatigue or weakness</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Dizziness or light-headedness</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">&bull;</span> Swelling in legs, ankles, or feet</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-amber-500">
+          <h3 class="text-base font-semibold text-gray-900 mb-3">Key Risk Factors</h3>
+          <div class="text-sm text-gray-600 space-y-3">
+            <div>
+              <p class="font-medium text-gray-700">Modifiable</p>
+              <ul class="mt-1 space-y-1">
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> High blood pressure (hypertension)</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> High cholesterol (LDL)</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> Smoking</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> Obesity / overweight</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> Physical inactivity</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> Diabetes or pre-diabetes</li>
+                <li class="flex items-start gap-2"><span class="text-amber-500">&bull;</span> Excessive alcohol</li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-medium text-gray-700">Non-Modifiable</p>
+              <ul class="mt-1 space-y-1">
+                <li class="flex items-start gap-2"><span class="text-gray-400">&bull;</span> Age (risk rises after 45/55)</li>
+                <li class="flex items-start gap-2"><span class="text-gray-400">&bull;</span> Sex (men at higher early risk)</li>
+                <li class="flex items-start gap-2"><span class="text-gray-400">&bull;</span> Family history of heart disease</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-green-500">
+          <h3 class="text-base font-semibold text-gray-900 mb-3">Prevention Tips</h3>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Exercise at least 150 min/week (moderate intensity)</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Eat a heart-healthy diet: fruits, vegetables, whole grains, lean protein</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Quit smoking and limit alcohol</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Maintain a healthy weight (BMI 18.5-24.9)</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Monitor blood pressure and cholesterol regularly</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Manage stress through mindfulness or relaxation</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Get 7-9 hours of sleep per night</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&bull;</span> Take prescribed medications consistently</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Metric Reference Table -->
+      <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-base font-semibold text-gray-900 mb-4">Understanding Your Metrics</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p class="font-semibold text-gray-800 text-sm">Blood Pressure</p>
+            <p class="text-xs text-green-700 mt-1"><span class="font-medium">Normal:</span> &lt; 120/80 mmHg</p>
+            <p class="text-xs text-red-600"><span class="font-medium">Concern:</span> &ge; 130/80 mmHg</p>
+            <p class="text-xs text-gray-500 mt-1">Elevated BP is the leading modifiable risk factor.</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p class="font-semibold text-gray-800 text-sm">Total Cholesterol</p>
+            <p class="text-xs text-green-700 mt-1"><span class="font-medium">Normal:</span> &lt; 200 mg/dL</p>
+            <p class="text-xs text-red-600"><span class="font-medium">Concern:</span> &ge; 240 mg/dL</p>
+            <p class="text-xs text-gray-500 mt-1">High LDL cholesterol promotes arterial plaque.</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p class="font-semibold text-gray-800 text-sm">Fasting Blood Sugar</p>
+            <p class="text-xs text-green-700 mt-1"><span class="font-medium">Normal:</span> &lt; 100 mg/dL</p>
+            <p class="text-xs text-red-600"><span class="font-medium">Concern:</span> &ge; 126 mg/dL</p>
+            <p class="text-xs text-gray-500 mt-1">Diabetes doubles the risk of heart disease.</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p class="font-semibold text-gray-800 text-sm">Resting Heart Rate</p>
+            <p class="text-xs text-green-700 mt-1"><span class="font-medium">Normal:</span> 60-100 bpm</p>
+            <p class="text-xs text-red-600"><span class="font-medium">Concern:</span> &gt; 100 bpm (rest)</p>
+            <p class="text-xs text-gray-500 mt-1">Lower resting HR generally indicates better fitness.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dataset Info -->
+      <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-base font-semibold text-gray-900 mb-3">About the Dataset</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          This tool's risk model is derived from a combined heart disease dataset of approximately
+          <strong>7,000 records</strong> sourced from the Cleveland, Hungarian, Switzerland, Long Beach VA,
+          and Statlog datasets. The model uses a simplified logistic-regression-inspired scoring system
+          across 11 clinical features. While educational, it captures key patterns observed in clinical
+          data &mdash; including the importance of exercise-induced angina, ST segment changes, chest pain type,
+          and traditional risk factors like age, blood pressure, and cholesterol.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 text-center py-6 text-sm mt-12">
+    <p class="max-w-2xl mx-auto">
+      For educational purposes only. This tool does not provide medical advice, diagnosis, or treatment.
+      Always consult a qualified healthcare provider for medical concerns.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("healthForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {
+        age: +document.getElementById("age").value,
+        gender: document.getElementById("sex").value === "male" ? 1 : 2,
+        height: 170,
+        weight: 70,
+        ap_hi: +document.getElementById("restingBP").value,
+        ap_lo: 80,
+        cholesterol: 1,
+        gluc: 1,
+        smoke: 0,
+        alco: 0,
+        active: 1
+    };
+
+    const res = await fetch("https://YOUR-BACKEND-URL/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    let risk = result.probability;
+
+    let label = "";
+    if (risk < 0.33) label = "Low Risk";
+    else if (risk < 0.66) label = "Moderate Risk";
+    else label = "High Risk";
+
+    document.getElementById("riskMeter").innerHTML = `
+        <h2>${Math.round(risk * 100)}</h2>
+        <p>${label}</p>
+    `;
+});
+    // ── Slider live updates ──────────────────────────────────────────────
+    const sliders = [
+      { id: 'age', display: v => v },
+      { id: 'restingBP', display: v => v + ' mmHg' },
+      { id: 'cholesterol', display: v => v + ' mg/dL' },
+      { id: 'maxHR', display: v => v + ' bpm' },
+      { id: 'oldpeak', display: v => parseFloat(v).toFixed(1) + ' mm' },
+    ];
+    sliders.forEach(s => {
+      const el = document.getElementById(s.id);
+      const valEl = document.getElementById(s.id + 'Val');
+      el.addEventListener('input', () => { valEl.textContent = s.display(el.value); });
+    });
+
+    // ── Risk scoring model ───────────────────────────────────────────────
+    
+      // Age
+      var ageScore = (form.age - 29) / (77 - 29);
+      logit += ageScore * 1.8;
+      factors.push({ name: 'Age', contribution: ageScore - 0.3,
+        description: 'Age ' + form.age + '. Risk increases with age, especially after 45 for men and 55 for women.',
+        value: form.age + ' years' });
+
+      // Sex
+      var sexContrib = form.sex === 'male' ? 0.9 : 0;
+      logit += sexContrib;
+      factors.push({ name: 'Sex', contribution: form.sex === 'male' ? 0.6 : -0.2,
+        description: form.sex === 'male'
+          ? 'Men have a statistically higher risk of heart disease at younger ages.'
+          : 'Women have relatively lower risk before menopause, but risk increases afterward.',
+        value: form.sex === 'male' ? 'Male' : 'Female' });
+
+      // Chest Pain Type
+      var cpMap = { ASY: 1.4, NAP: 0.3, ATA: -0.2, TA: -0.5 };
+      logit += cpMap[form.chestPainType] || 0;
+      var cpDesc = { ASY: 'Asymptomatic \u2014 paradoxically highest-risk pattern in this dataset.',
+        NAP: 'Non-anginal pain \u2014 mild association with heart disease.',
+        ATA: 'Atypical angina \u2014 lower association.',
+        TA: 'Typical angina \u2014 classic symptom but often lower statistical risk in dataset.' };
+      var cpLabel = { ASY: 'Asymptomatic', NAP: 'Non-Anginal Pain', ATA: 'Atypical Angina', TA: 'Typical Angina' };
+      factors.push({ name: 'Chest Pain Type', contribution: (cpMap[form.chestPainType] || 0) / 2,
+        description: cpDesc[form.chestPainType] || '', value: cpLabel[form.chestPainType] || form.chestPainType });
+
+      // Resting BP
+      var bpNorm = (form.restingBP - 80) / (200 - 80);
+      logit += bpNorm * 1.2 - 0.4;
+      factors.push({ name: 'Resting Blood Pressure', contribution: bpNorm - 0.35,
+        description: form.restingBP >= 130
+          ? 'Elevated BP (\u2265130 mmHg) is a major modifiable risk factor for heart disease.'
+          : 'BP is in an acceptable range.',
+        value: form.restingBP + ' mmHg' });
+
+      // Cholesterol
+      var cholNorm = (form.cholesterol - 100) / (600 - 100);
+      logit += cholNorm * 1.0 - 0.3;
+      factors.push({ name: 'Serum Cholesterol', contribution: cholNorm - 0.3,
+        description: form.cholesterol >= 200
+          ? 'High cholesterol (\u2265200 mg/dL) increases plaque buildup in arteries.'
+          : 'Cholesterol is within a reasonable range.',
+        value: form.cholesterol + ' mg/dL' });
+
+      // Fasting BS
+      logit += form.fastingBS === 'yes' ? 0.6 : 0;
+      factors.push({ name: 'Fasting Blood Sugar > 120', contribution: form.fastingBS === 'yes' ? 0.5 : -0.1,
+        description: form.fastingBS === 'yes'
+          ? 'Elevated fasting blood sugar may indicate diabetes, a significant heart disease risk factor.'
+          : 'Fasting blood sugar is normal.',
+        value: form.fastingBS === 'yes' ? 'Yes (> 120 mg/dL)' : 'No (\u2264 120 mg/dL)' });
+
+      // Resting ECG
+      var ecgMap = { LVH: 0.5, ST: 0.3, Normal: 0 };
+      logit += ecgMap[form.restingECG] || 0;
+      var ecgDesc = { LVH: 'Left ventricular hypertrophy suggests the heart is working harder than normal.',
+        ST: 'ST-T wave abnormalities can indicate ischemia or other cardiac conditions.',
+        Normal: 'Normal ECG is a positive sign.' };
+      var ecgLabel = { LVH: 'LV Hypertrophy', ST: 'ST-T Abnormality', Normal: 'Normal' };
+      factors.push({ name: 'Resting ECG', contribution: (ecgMap[form.restingECG] || 0) / 1.2,
+        description: ecgDesc[form.restingECG] || '', value: ecgLabel[form.restingECG] || form.restingECG });
+
+      // Max HR
+      var hrNorm = (form.maxHR - 60) / (202 - 60);
+      logit += -(hrNorm * 1.5 - 0.8);
+      factors.push({ name: 'Max Heart Rate', contribution: -(hrNorm - 0.5),
+        description: form.maxHR >= 150
+          ? 'Good cardiovascular response \u2014 higher max HR achieved is generally protective.'
+          : 'Lower max HR during exercise can indicate reduced cardiac reserve.',
+        value: form.maxHR + ' bpm' });
+
+      // Exercise Angina
+      logit += form.exerciseAngina === 'yes' ? 1.0 : 0;
+      factors.push({ name: 'Exercise-Induced Angina', contribution: form.exerciseAngina === 'yes' ? 0.75 : -0.1,
+        description: form.exerciseAngina === 'yes'
+          ? 'Chest pain during exercise is a strong indicator of coronary artery disease.'
+          : 'No exercise-induced angina is a favorable sign.',
+        value: form.exerciseAngina === 'yes' ? 'Yes' : 'No' });
+
+      // Oldpeak
+      var opNorm = Math.min(form.oldpeak, 6.2) / 6.2;
+      logit += opNorm * 1.3;
+      factors.push({ name: 'ST Depression (Oldpeak)', contribution: opNorm,
+        description: form.oldpeak >= 2
+          ? 'Significant ST depression (\u22652 mm) during exercise indicates possible myocardial ischemia.'
+          : form.oldpeak > 0 ? 'Mild ST depression \u2014 moderate indicator of cardiac stress.'
+          : 'No ST depression is a favorable finding.',
+        value: form.oldpeak.toFixed(1) + ' mm' });
+
+      // ST Slope
+      var slopeMap = { Down: 0.8, Flat: 0.5, Up: -0.3 };
+      logit += slopeMap[form.stSlope] || 0;
+      var slopeDesc = { Down: 'Downsloping ST segment is associated with higher risk of coronary artery disease.',
+        Flat: 'Flat ST slope is an intermediate risk indicator.',
+        Up: 'Upsloping ST segment is generally a favorable sign.' };
+      var slopeLabel = { Down: 'Downsloping', Flat: 'Flat', Up: 'Upsloping' };
+      factors.push({ name: 'ST Slope', contribution: (slopeMap[form.stSlope] || 0) / 1.2,
+        description: slopeDesc[form.stSlope] || '', value: slopeLabel[form.stSlope] || form.stSlope });
+
+      
+    // ── Chart instances ──────────────────────────────────────────────────
+    var barChartInstance = null;
+    var radarChartInstance = null;
+
+   
+
+      // Risk Meter
+      var color = result.riskLevel === 'High' ? '#dc2626' : result.riskLevel === 'Moderate' ? '#f59e0b' : '#16a34a';
+      var bgClass = result.riskLevel === 'High' ? 'bg-red-50 border-red-200'
+        : result.riskLevel === 'Moderate' ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200';
+      var textClass = result.riskLevel === 'High' ? 'text-red-700'
+        : result.riskLevel === 'Moderate' ? 'text-amber-700' : 'text-green-700';
+
+      var meter = document.getElementById('riskMeter');
+      meter.className = 'rounded-xl border-2 p-6 text-center ' + bgClass;
+      meter.innerHTML =
+        '<p class="text-sm font-medium text-gray-500 mb-1">Overall Risk Score</p>' +
+        '<div class="relative inline-flex items-center justify-center mb-3">' +
+          '<svg viewBox="0 0 120 70" class="w-40 h-24">' +
+            '<path d="M10 65 A50 50 0 0 1 110 65" fill="none" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>' +
+            '<path d="M10 65 A50 50 0 0 1 110 65" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + ((result.riskScore / 100) * 157) + ' 157"/>' +
+            '<text x="60" y="58" text-anchor="middle" font-size="20" font-weight="bold" fill="' + color + '">' + result.riskScore + '</text>' +
+          '</svg>' +
+        '</div>' +
+        '<p class="text-2xl font-bold ' + textClass + '">' + result.riskLevel + ' Risk</p>' +
+        '<p class="text-xs text-gray-500 mt-1">Score: ' + result.riskScore + ' / 100</p>';
+
+      // Factor Bars
+      var barsEl = document.getElementById('factorBars');
+      barsEl.innerHTML = '';
+      result.factors.forEach(function(f) {
+        var pct = Math.round(Math.abs(f.contribution) * 100);
+        var isRisk = f.contribution > 0;
+        var barColor = isRisk ? 'bg-red-500' : 'bg-green-500';
+        var labelColor = isRisk ? 'text-red-700' : 'text-green-700';
+        var label = isRisk ? '\u25B2 Risk' : '\u25BC Protect';
+
+        barsEl.innerHTML +=
+          '<div class="mb-4">' +
+            '<div class="flex justify-between items-baseline mb-1">' +
+              '<span class="text-sm font-medium text-gray-800">' + f.name + '</span>' +
+              '<span class="text-xs text-gray-500">' + f.value + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-2">' +
+              '<div class="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">' +
+                '<div class="' + barColor + ' h-3 rounded-full transition-all duration-700" style="width:' + Math.min(pct, 100) + '%"></div>' +
+              '</div>' +
+              '<span class="text-xs font-semibold w-16 text-right ' + labelColor + '">' + label + '</span>' +
+            '</div>' +
+            '<p class="text-xs text-gray-500 mt-1">' + f.description + '</p>' +
+          '</div>';
+      });
+
+      // Bar Chart
+      var barCtx = document.getElementById('barChart').getContext('2d');
+      if (barChartInstance) barChartInstance.destroy();
+      barChartInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: result.factors.map(function(f) { return f.name; }),
+          datasets: [{
+            label: 'Risk Contribution',
+            data: result.factors.map(function(f) { return +(f.contribution * 100).toFixed(1); }),
+            backgroundColor: result.factors.map(function(f) {
+              return f.contribution > 0 ? 'rgba(220,38,38,0.75)' : 'rgba(22,163,74,0.75)';
+            }),
+            borderRadius: 5,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { x: { title: { display: true, text: 'Impact score' } } },
+        }
+      });
+
+      // Radar Chart
+      var radarCtx = document.getElementById('radarChart').getContext('2d');
+      if (radarChartInstance) radarChartInstance.destroy();
+      radarChartInstance = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: result.factors.map(function(f) { return f.name; }),
+          datasets: [{
+            label: 'Your Risk Profile',
+            data: result.factors.map(function(f) { return Math.max(0, Math.round((f.contribution + 1) * 50)); }),
+            borderColor: 'rgba(220,38,38,0.8)',
+            backgroundColor: 'rgba(220,38,38,0.15)',
+            pointBackgroundColor: 'rgba(220,38,38,1)',
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: { r: { min: 0, max: 100, ticks: { stepSize: 25 } } },
+          plugins: { legend: { display: false } },
+        }
+      });
+
+      // Recommendation
+      var recEl = document.getElementById('recommendation');
+      var recBg, recTitle, recText;
+      if (result.riskLevel === 'High') {
+        recBg = 'bg-red-50 border-red-500';
+        recTitle = 'Recommended Action';
+        recText = 'Your results suggest elevated cardiovascular risk. Please consult a physician or cardiologist promptly for a formal evaluation, including ECG, lipid panel, and stress test.';
+      } else if (result.riskLevel === 'Moderate') {
+        recBg = 'bg-amber-50 border-amber-500';
+        recTitle = 'Recommended Action';
+        recText = 'Your results indicate moderate cardiovascular risk. Schedule a check-up with your doctor, discuss lifestyle modifications, and monitor blood pressure and cholesterol regularly.';
+      } else {
+        recBg = 'bg-green-50 border-green-500';
+        recTitle = 'Keep It Up';
+        recText = 'Your results suggest relatively low cardiovascular risk. Continue maintaining a healthy lifestyle with regular exercise, a balanced diet, and routine check-ups.';
+      }
+      recEl.className = 'rounded-xl p-5 border-l-4 ' + recBg;
+      recEl.innerHTML = '<h4 class="font-semibold text-gray-800 mb-2">' + recTitle + '</h4>' +
+        '<p class="text-sm text-gray-700">' + recText + '</p>';
+
+      // Scroll to results
+      setTimeout(function() {
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+
+    // ── Form submit ──────────────────────────────────────────────────────
+    document.getElementById('healthForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = {
+        age: parseInt(document.getElementById('age').value),
+        sex: document.getElementById('sex').value,
+        chestPainType: document.getElementById('chestPainType').value,
+        restingBP: parseInt(document.getElementById('restingBP').value),
+        cholesterol: parseInt(document.getElementById('cholesterol').value),
+        fastingBS: document.getElementById('fastingBS').value,
+        restingECG: document.getElementById('restingECG').value,
+        maxHR: parseInt(document.getElementById('maxHR').value),
+        exerciseAngina: document.getElementById('exerciseAngina').value,
+        oldpeak: parseFloat(document.getElementById('oldpeak').value),
+        stSlope: document.getElementById('stSlope').value,
+      };
+      var result = diagnose(form);
+      renderResults(result);
+    });
+    fetch("https://my-backend.onrender.com/predict")
+  </script>
+</body>
+</html>
